@@ -17,11 +17,19 @@
 
 <body>
 
-    <audio class="song" loop autoplay>
-        <source src="./music/hbd.mpeg">
+    <!-- <audio class="song" loop autoplay>
+        <source src="./music/beauty.mp3">
         </source>
         Your browser isn't invited for super fun audio time.
-    </audio>
+    </audio> -->
+
+     <audio id="bgm" class="song" loop preload="auto" muted>
+    <source src="./music/beauty.mp3" />
+    Your browser isn't invited for super fun audio time.
+  </audio>
+
+  <!-- Overlay mời bấm để bật tiếng -->
+  <button id="audioGate" class="audio-gate" aria-label="Bật nhạc">🔈 Bật nhạc</button>
 
     <div class="container">
         <div class="one">

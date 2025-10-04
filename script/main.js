@@ -270,3 +270,60 @@ const animationTimeline = () => {
         tl.restart();
     });
 }
+
+(function () {
+  const audio = document.getElementById('bgm');
+  const gate  = document.getElementById('audioGate');
+
+  // 1) Thử autoplay ở trạng thái muted (desktop sẽ chạy luôn)
+  //    Mobile cũng được phép play khi muted.
+  function tryMutedAutoplay() {
+    if (!audio) return;
+    audio.play().catch(() => {
+      // Bị chặn => đợi người dùng chạm nút
+    });
+  }
+  // Gọi sau khi DOM sẵn sàng
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', tryMutedAutoplay, { once: true });
+  } else {
+    tryMutedAutoplay();
+  }
+
+  // 2) Khi người dùng tương tác: bỏ mute và play
+  async function unlockAndPlay() {
+    try {
+      audio.muted = false;           // bật tiếng
+      await audio.play();            // play trong ngữ cảnh thao tác user
+      gate.classList.add('hidden');  // ẩn nút nếu thành công
+    } catch (e) {
+      // Nếu vẫn lỗi (mạng chậm), chờ canplay rồi thử lại
+      const onReady = async () => {
+        audio.removeEventListener('canplay', onReady);
+        try {
+          audio.muted = false;
+          await audio.play();
+          gate.classList.add('hidden');
+        } catch {}
+      };
+      audio.addEventListener('canplay', onReady);
+    }
+  }
+
+  // 3) Gán sự kiện cho nhiều kiểu tương tác (đảm bảo iOS/Android nhận)
+  ['click','touchstart','pointerdown','keydown'].forEach(evt => {
+    gate.addEventListener(evt, unlockAndPlay, { once: true, passive: true });
+  });
+
+  // 4) (Tùy chọn) nếu user chạm bất kỳ đâu trên trang thay vì bấm nút
+  function globalUnlock() {
+    unlockAndPlay();
+    // bỏ listener sau lần đầu
+    ['click','touchstart','pointerdown','keydown'].forEach(evt => {
+      document.removeEventListener(evt, globalUnlock, { passive: true });
+    });
+  }
+  ['click','touchstart','pointerdown','keydown'].forEach(evt => {
+    document.addEventListener(evt, globalUnlock, { passive: true });
+  });
+})();
