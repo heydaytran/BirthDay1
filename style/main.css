@@ -109,10 +109,10 @@ body {
 }
 
 .six .hat {
-  left: 41.5%;
+  left: 40%;
   position: absolute;
   /* transform: scale(0.1); */
-  top: -35%;
+  top: -60%;
   width: 80px;
 }
 
@@ -300,3 +300,11 @@ body {
   box-shadow: 0 6px 18px rgba(0,0,0,.2);
 }
 .audio-gate.hidden { display: none; }
+
+.six .hat {
+  left: 40%;
+  position: absolute;
+  /* transform: scale(0.1); */
+  top: -50%;
+  width: 80px;
+}
