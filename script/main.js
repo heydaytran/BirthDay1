@@ -273,7 +273,11 @@ const animationTimeline = () => {
 .add(() => {
   const v = document.getElementById('introVideo');
   const img = document.getElementById('imagePath');
+    const bgm = document.getElementById('bgm'); // 🎵 nhạc nền
+
    if (!v) return;
+     gsap.to(bgm, { volume: 0, duration: 1 });
+
   v.classList.remove('hidden');     // đảm bảo CSS không còn opacity:0 / display:none
   // Nếu đã “prime” ở trên, lệnh này trên mobile sẽ chạy trơn tru
   v.play().catch(() => {
@@ -294,8 +298,11 @@ const animationTimeline = () => {
 // 2) TẠM DỪNG timeline cho tới khi video kết thúc
 .addPause('+=0', () => {
   const v = document.getElementById('introVideo');
+    const bgm = document.getElementById('bgm');
+
   const onEnded = () => {
     v.removeEventListener('ended', onEnded);
+    gsap.to(bgm, { volume: 1, duration: 1 });
 
     // Fade-out video rồi ẩn đi
     TweenMax.to(v, 0.4, {
