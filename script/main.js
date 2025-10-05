@@ -276,7 +276,13 @@ const animationTimeline = () => {
     const bgm = document.getElementById('bgm'); // 🎵 nhạc nền
 
    if (!v) return;
-     gsap.to(bgm, { volume: 0, duration: 1 });
+       if (bgm) {
+    // Cách 1: mute (khuyên dùng để không mất vị trí phát)
+    bgm.muted = true;
+
+    // (Tuỳ chọn cho desktop): vẫn tween volume để có cảm giác fade mượt
+    try { gsap.to(bgm, { volume: 0, duration: 0.8 }); } catch {}
+  }
 
   v.classList.remove('hidden');     // đảm bảo CSS không còn opacity:0 / display:none
   // Nếu đã “prime” ở trên, lệnh này trên mobile sẽ chạy trơn tru
