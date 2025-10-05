@@ -26,7 +26,7 @@ window.addEventListener('load', () => {
           }
           // 👉 Thay 'matkhau123' bằng mật khẩu thật bạn muốn
           if (pass !== '19102002') {
-            Swal.showValidationMessage('❌ À nhầm , là ngày sinh của Việt Hồng chứ 😜 !viết liền không dấu nhé bro!');
+            Swal.showValidationMessage('❌ À nhầm , là ngày sinh của Việt Hồng chứ 😜 ! Ngày tháng năm viết liền không dấu nhé bro!');
             return false;
           }
           return true;
@@ -311,10 +311,8 @@ const animationTimeline = () => {
    if (!v) return;
        if (bgm) {
     // Cách 1: mute (khuyên dùng để không mất vị trí phát)
-    bgm.muted = true;
 
     // (Tuỳ chọn cho desktop): vẫn tween volume để có cảm giác fade mượt
-    try { gsap.to(bgm, { volume: 0, duration: 0.8 }); } catch {}
   }
 
   v.classList.remove('hidden');     // đảm bảo CSS không còn opacity:0 / display:none
@@ -440,3 +438,15 @@ const animationTimeline = () => {
   });
 })();
 
+  function createHeart() {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.background = 'rgba(255,182,193,' + (Math.random() * 0.7 + 0.3) + ')'; // Hồng nhạt
+    heart.style.animationDuration = Math.random() * 3 + 3 + 's';
+    heart.style.width = heart.style.height = Math.random() * 10 + 10 + 'px';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+  }
+
+  setInterval(createHeart, 300);
