@@ -10,9 +10,24 @@ window.addEventListener('load', () => {
         cancelButtonText: 'Không phải',
     }).then((result) => {
         if (result.isConfirmed) {
-            document.querySelector('.song').play();
-            animationTimeline();
-        } else {
+  document.querySelector('.song').play();
+
+  // 👇 THÊM: prime video trong ngữ cảnh user gesture
+  const v = document.getElementById('introVideo');
+  if (v) {
+    v.muted = true;                 // giữ muted để an toàn
+    v.playsInline = true;           // iOS property song song với playsinline attr
+    try {
+       v.play();               // play trong gesture
+      v.pause();                    // pause ngay để “mở khoá”
+      v.currentTime = 0;            // tua về đầu, sẵn sàng phát sau
+    } catch (e) {
+      // Nếu vẫn bị chặn, không sao: GSAP sẽ thử lại sau.
+    }
+  }
+
+  animationTimeline();
+}else {
             // hiển thị thông báo khi chọn "Không phải"
             Swal.fire({
                 title: '🚫 Đi chỗ khác chơi!',
@@ -258,6 +273,12 @@ const animationTimeline = () => {
 .add(() => {
   const v = document.getElementById('introVideo');
   const img = document.getElementById('imagePath');
+   if (!v) return;
+  v.classList.remove('hidden');     // đảm bảo CSS không còn opacity:0 / display:none
+  // Nếu đã “prime” ở trên, lệnh này trên mobile sẽ chạy trơn tru
+  v.play().catch(() => {
+    // Nếu có lỗi, có thể yêu cầu user chạm màn hình (ít gặp nếu đã prime)
+  });
 
   // Ẩn ảnh nếu muốn video "thế chỗ" ảnh
   // TweenMax.set(img, { autoAlpha: 0 });
