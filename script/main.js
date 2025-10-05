@@ -1,42 +1,75 @@
 // trigger to play music in the background with sweetalert
 window.addEventListener('load', () => {
-    Swal.fire({
-        title: 'Bạn có phải là Việt Hồng không?',
-        icon: 'warning',
+  Swal.fire({
+    title: 'Bạn có phải là Việt Hồng không?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Đúng rồi',
+    cancelButtonText: 'Không phải',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // 👉 Bước 1: hỏi mật khẩu
+      Swal.fire({
+        title: 'Mật khẩu là ngày tháng năm sinh của đại ca Thịnh!',
+        input: 'password',
+        inputPlaceholder: 'Nhập mật khẩu ở đây...',
+        inputAttributes: { autocapitalize: 'off' },
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Đúng rồi',
-        cancelButtonText: 'Không phải',
-    }).then((result) => {
-        if (result.isConfirmed) {
-  document.querySelector('.song').play();
+        confirmButtonText: 'Xác nhận',
+        cancelButtonText: 'Hủy',
+        preConfirm: (pass) => {
+          if (!pass) {
+            Swal.showValidationMessage('à nhầm , là ngày sinh của Việt Hồng chứ 😜');
+            return false;
+          }
+          // 👉 Thay 'matkhau123' bằng mật khẩu thật bạn muốn
+          if (pass !== '19102002') {
+            Swal.showValidationMessage('❌ À nhầm , là ngày sinh của Việt Hồng chứ 😜 !viết liền không dấu nhé bro!');
+            return false;
+          }
+          return true;
+        },
+      }).then((pwResult) => {
+        if (pwResult.isConfirmed) {
+          // ✅ Nếu đúng mật khẩu → chạy nhạc và video
+          const bgm = document.getElementById('bgm');
+          bgm.play();
 
-  // 👇 THÊM: prime video trong ngữ cảnh user gesture
-  const v = document.getElementById('introVideo');
-  if (v) {
-    v.muted = true;                 // giữ muted để an toàn
-    v.playsInline = true;           // iOS property song song với playsinline attr
-    try {
-       v.play();               // play trong gesture
-      v.pause();                    // pause ngay để “mở khoá”
-      v.currentTime = 0;            // tua về đầu, sẵn sàng phát sau
-    } catch (e) {
-      // Nếu vẫn bị chặn, không sao: GSAP sẽ thử lại sau.
-    }
-  }
+          // 👇 Prime video trong ngữ cảnh user gesture
+          const v = document.getElementById('introVideo');
+          if (v) {
+            v.muted = true;
+            v.playsInline = true;
+            try {
+              v.play();
+              v.pause();
+              v.currentTime = 0;
+            } catch (e) {}
+          }
 
-  animationTimeline();
-}else {
-            // hiển thị thông báo khi chọn "Không phải"
-            Swal.fire({
-                title: '🚫 Đi chỗ khác chơi!',
-                icon: 'info',
-                confirmButtonText: 'OK'
-            });
+          // 👉 Bắt đầu hoạt ảnh
+          animationTimeline();
+        } else {
+          Swal.fire({
+            title: '🚫 Sai hoặc hủy mật khẩu!',
+            icon: 'error',
+            confirmButtonText: 'OK',
+          });
         }
-    });
+      });
+    } else {
+      // ❌ Nếu chọn “Không phải”
+      Swal.fire({
+        title: '🚫 Đi chỗ khác chơi!',
+        icon: 'info',
+        confirmButtonText: 'OK',
+      });
+    }
+  });
 });
+
 
 
 // animation timeline
