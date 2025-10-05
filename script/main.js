@@ -24,7 +24,6 @@ window.addEventListener('load', () => {
 });
 
 
-
 // animation timeline
 const animationTimeline = () => {
     // split chars that needs to be animated individually
@@ -256,7 +255,47 @@ const animationTimeline = () => {
         },
         0.3
     )
-    .to(".six", 0.5, {
+.add(() => {
+  const v = document.getElementById('introVideo');
+  const img = document.getElementById('imagePath');
+
+  // Ẩn ảnh nếu muốn video "thế chỗ" ảnh
+  // TweenMax.set(img, { autoAlpha: 0 });
+
+  // Hiện video + fade-in
+  TweenMax.set(v, { display: 'block', opacity: 0 });
+  TweenMax.to(v, 0.6, { opacity: 1 });
+
+  // Phát video (muted nên không bị chặn)
+  try { v.currentTime = 0; v.play(); } catch (e) {}
+})
+
+// 2) TẠM DỪNG timeline cho tới khi video kết thúc
+.addPause('+=0', () => {
+  const v = document.getElementById('introVideo');
+  const onEnded = () => {
+    v.removeEventListener('ended', onEnded);
+
+    // Fade-out video rồi ẩn đi
+    TweenMax.to(v, 0.4, {
+      opacity: 0,
+      onComplete: () => {
+        v.pause();
+        v.currentTime = 0;
+        TweenMax.set(v, { display: 'none' });
+
+        // Nếu trước đó bạn ẩn ảnh, có thể hiện lại:
+        // TweenMax.set('#imagePath', { autoAlpha: 1 });
+
+        // Tiếp tục timeline
+        tl.play();
+      }
+    });
+  };
+  v.addEventListener('ended', onEnded);
+})
+
+     .to(".six", 0.5, {
         opacity: 0,
         y: 30,
         zIndex: "-1",
@@ -333,3 +372,4 @@ const animationTimeline = () => {
     document.addEventListener(evt, globalUnlock, { passive: true });
   });
 })();
+

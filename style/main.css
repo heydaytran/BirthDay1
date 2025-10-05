@@ -308,3 +308,37 @@ body {
   top: -50%;
   width: 80px;
 }
+
+
+#introVideo { display: none; opacity: 0; }
+
+/* Khối bao để định vị tương đối */
+.media-stack {
+  position: relative;
+  display: inline-block;        /* cho gọn theo kích thước ảnh */
+}
+
+/* Ảnh nền */
+.profile-picture {
+  display: block;
+  width: 320px;                 /* điều chỉnh theo ý bạn */
+  height: auto;
+  border-radius: 12px;          /* nếu ảnh có bo góc */
+}
+
+/* Video chồng lên ảnh */
+.overlay-video {
+  position: absolute;
+  inset: 0;                     /* = top:0; right:0; bottom:0; left:0; */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;            /* lấp đầy theo khung ảnh */
+  z-index: 2;                   /* cao hơn ảnh */
+  border-radius: 12px;          /* trùng với ảnh để overlay đẹp */
+  pointer-events: none;         /* không bắt chuột (nếu cần) */
+  opacity: 1;                   /* sẽ ẩn/hiện bằng class .hidden */
+  transition: opacity .4s ease; /* mượt mà khi ẩn/hiện */
+}
+
+/* Ẩn lúc đầu, sẽ bỏ bằng JS ngay khi cần phát */
+.hidden { opacity: 0; }
